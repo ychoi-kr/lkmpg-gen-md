@@ -1,0 +1,3 @@
+[submodule "lkmpg"]
+	path = lkmpg
+	url = https://github.com/sysprog21/lkmpg.git
