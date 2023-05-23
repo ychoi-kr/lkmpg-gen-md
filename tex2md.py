@@ -202,7 +202,7 @@ def convert_section_references(content):
     for match in section_matches:
         section_title = match.group(1)
         label = match.group(2)
-        replacement = f'\n<a name="{label}"></a>\n## {section_title}'
+        replacement = f'\n<a name="{label}"></a>\n\n## {section_title}'
         content = content.replace(match.group(0), replacement)
 
     return content
@@ -239,13 +239,13 @@ def convert_refs(content):
         page_map = get_page_map()
         page_id = page_map.get(chapter_number)
         if '.' in match.group(1):
-            replacement = f'[{match.group(1)}]({page_id}#{anchor})'
+            replacement = f'[{match.group(1)}]({base_url}{page_id}#{anchor})'
         elif re.match('\d+', match.group(1)):
-            replacement = f'[{match.group(1)}]({page_id})'
+            replacement = f'[{match.group(1)}]({base_url}{page_id})'
         else:
             section_number = ref_dic[match.group(3)]
             page_id = page_map.get(section_number.split('.')[0])
-            replacement = f'[{section_number}]({page_id}#{anchor})'
+            replacement = f'[{section_number}]({base_url}{page_id}#{anchor})'
         content = content.replace(match.group(0), replacement)
     return content
 
