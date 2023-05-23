@@ -1,6 +1,7 @@
 6. Character Device drivers
 
 <a name="sec:file_operations"></a>
+
 ## 6.1. The file_operations Structure
 
 The `file_operations` structure is defined in [include/linux/fs.h](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/linux/fs.h), and holds pointers to functions defined by the driver that perform various operations on the device. Each field of the structure corresponds to the address of some function defined by the driver to handle a requested operation.
@@ -72,9 +73,10 @@ An instance of `struct file_operations` containing pointers to functions that ar
 
 Since Linux v3.14, the read, write and seek operations are guaranteed for thread-safe by using the `f_pos` specific lock, which makes the file position update to become the mutual exclusion. So, we can safely implement those operations without unnecessary locking.
 
-Additionally, since Linux v5.6, the `proc_ops` structure was introduced to replace the use of the `file_operations` structure when registering proc handlers. See more information in the [7.1](196798#sec:proc_ops) section.
+Additionally, since Linux v5.6, the `proc_ops` structure was introduced to replace the use of the `file_operations` structure when registering proc handlers. See more information in the [7.1](https://wikidocs.net/196798#sec:proc_ops) section.
 
 <a name="sec:file_struct"></a>
+
 ## 6.2. The file structure
 
 Each device is represented in the kernel by a file structure, which is defined in [include/linux/fs.h](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/linux/fs.h). Be aware that a file is a kernel level structure and never appears in a user space program. It is not the same thing as a `FILE`, which is defined by glibc and would never appear in a kernel space function. Also, its name is a bit misleading; it represents an abstract open 'file', not a file on a disk, which is represented by a structure named `inode`.
@@ -84,6 +86,7 @@ An instance of struct file is commonly named `filp`. You'll also see it referred
 Go ahead and look at the definition of file. Most of the entries you see, like struct dentry are not used by device drivers, and you can ignore them. This is because drivers do not fill file directly; they only use structures contained in file which are created elsewhere.
 
 <a name="sec:register_device"></a>
+
 ## 6.3. Registering A Device
 
 As discussed earlier, char devices are accessed through device files, usually located in `/dev`. This is by convention. When writing a driver, it is OK to put the device file in your current directory. Just make sure you place it in `/dev` for a production driver. The major number tells you which driver handles which device file. The minor number is used only by the driver itself to differentiate which device it is operating on, just in case the driver handles more than one device.
@@ -120,9 +123,10 @@ Once we finish the initialization, we can add the char device to the system by u
 
     int cdev_add(struct cdev *p, dev_t dev, unsigned count);
 
-To find a example using the interface, you can see `ioctl.c` described in section [9](196800).
+To find a example using the interface, you can see `ioctl.c` described in section [9](https://wikidocs.net/196800).
 
 <a name="sec:unregister_device"></a>
+
 ## 6.4. Unregistering A Device
 
 We can not allow the kernel module to be `rmmod`'ed whenever root feels like it. If the device file is opened by a process and then we remove the kernel module, using the file would cause a call to the memory location where the appropriate function (read/write) used to be. If we are lucky, no other code was loaded there, and we'll get an ugly error message. If we are unlucky, another kernel module was loaded into the same location, which means a jump into the middle of another function within the kernel. The results of this would be impossible to predict, but they can not be very positive.
@@ -138,6 +142,7 @@ Normally, when you do not want to allow something, you return an error code (a n
 It is important to keep the counter accurate; if you ever do lose track of the correct usage count, you will never be able to unload the module; it's now reboot time, boys and girls. This is bound to happen to you sooner or later during a module's development.
 
 <a name="sec:chardev_c"></a>
+
 ## 6.5. chardev.c
 
 The next code sample creates a char driver named `chardev`. You can dump its device file.
@@ -146,7 +151,7 @@ The next code sample creates a char driver named `chardev`. You can dump its dev
 
 (or open the file with a program) and the driver will put the number of times the device file has been read from into the file. We do not support writing to the file (like `echo "hi" > /dev/hello`), but catch these attempts and tell the user that the operation is not supported. Don't worry if you don't see what we do with the data we read into the buffer; we don't do much with it. We simply read in the data and print a message acknowledging that we received it.
 
-In the multiple-threaded environment, without any protection, concurrent access to the same memory may lead to the race condition, and will not preserve the performance. In the kernel module, this problem may happen due to multiple instances accessing the shared resources. Therefore, a solution is to enforce the exclusive access. We use atomic Compare-And-Swap (CAS) to maintain the states, `CDEV_NOT_USED` and `CDEV_EXCLUSIVE_OPEN`, to determine whether the file is currently opened by someone or not. CAS compares the contents of a memory location with the expected value and, only if they are the same, modifies the contents of that memory location to the desired value. See more concurrency details in the [12](196804) section.
+In the multiple-threaded environment, without any protection, concurrent access to the same memory may lead to the race condition, and will not preserve the performance. In the kernel module, this problem may happen due to multiple instances accessing the shared resources. Therefore, a solution is to enforce the exclusive access. We use atomic Compare-And-Swap (CAS) to maintain the states, `CDEV_NOT_USED` and `CDEV_EXCLUSIVE_OPEN`, to determine whether the file is currently opened by someone or not. CAS compares the contents of a memory location with the expected value and, only if they are the same, modifies the contents of that memory location to the desired value. See more concurrency details in the [12](https://wikidocs.net/196804) section.
 
     /*
      * 6.5. chardev.c: Creates a read-only char device that says how many times
@@ -312,6 +317,7 @@ In the multiple-threaded environment, without any protection, concurrent access 
     MODULE_LICENSE("GPL");
 
 <a name="sec:modules_for_versions"></a>
+
 ## 6.6. Writing Modules for Multiple Kernel Versions
 
 The system calls, which are the major interface the kernel shows to the processes, generally stay the same across versions. A new system call may be added, but usually the old ones will behave exactly like they used to. This is necessary for backward compatibility -- a new kernel version is not supposed to break regular processes. In most cases, the device files will also remain the same. On the other hand, the internal interfaces within the kernel can and do change between versions.

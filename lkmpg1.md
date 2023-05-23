@@ -11,11 +11,13 @@ Derivative works and translations of this document must be placed under the Open
 If you publish or distribute this book commercially, donations, royalties, and/or printed copies are greatly appreciated by the author and the [Linux Documentation Project](https://tldp.org/) (LDP). Contributing in this way shows your support for free software and the LDP. If you have questions or comments, please contact the address above.
 
 <a name="sec:authorship"></a>
+
 ## 1.1. Authorship
 
 The Linux Kernel Module Programming Guide was originally written for the 2.2 kernels by Ori Pomerantz. Eventually, Ori no longer had time to maintain the document. After all, the Linux kernel is a fast moving target. Peter Jay Salzman took over maintenance and updated it for the 2.4 kernels. Eventually, Peter no longer had time to follow developments with the 2.6 kernel, so Michael Burian became a co-maintainer to update the document for the 2.6 kernels. Bob Mottram updated the examples for 3.8+ kernels. Jim Huang upgraded to recent kernel versions (v5.x) and revised the LaTeX document.
 
 <a name="sec:acknowledgements"></a>
+
 ## 1.2. Acknowledgements
 
 The following people have contributed corrections or good suggestions:
@@ -23,6 +25,7 @@ The following people have contributed corrections or good suggestions:
 2011eric, 25077667, Arush Sharma, asas1asas200, Benno Bielmeier, Bob Lee, Brad Baker, ccs100203, Chih-Yu Chen, Ching-Hua (Vivian) Lin, ChinYikMing, Cyril Brulebois, Daniele Paolo Scarpazza, David Porter, demonsome, Dimo Velev, Ekang Monyet, fennecJ, Francois Audeon, gagachang, Gilad Reti, Horst Schirmeier, Hsin-Hsiang Peng, Ignacio Martin, JianXing Wu, linD026, lyctw, manbing, Marconi Jiang, mengxinayan, RinHizakura, Roman Lakeev, Stacy Prowell, Steven Lung, Tristan Lelong, Tucker Polomik, VxTeemo, Wei-Lun Tsai, xatier, Ylowy.
 
 <a name="sec:kernelmod"></a>
+
 ## 1.3. What Is A Kernel Module?
 
 So, you want to write a kernel module. You know C, you have written a few normal programs to run as processes, and now you want to get to where the real action is, to where a single wild pointer can wipe out your file system and a core dump means a reboot.
@@ -30,6 +33,7 @@ So, you want to write a kernel module. You know C, you have written a few normal
 What exactly is a kernel module? Modules are pieces of code that can be loaded and unloaded into the kernel upon demand. They extend the functionality of the kernel without the need to reboot the system. For example, one type of module is the device driver, which allows the kernel to access hardware connected to the system. Without modules, we would have to build monolithic kernels and add new functionality directly into the kernel image. Besides having larger kernels, this has the disadvantage of requiring us to rebuild and reboot the kernel every time we want new functionality.
 
 <a name="sec:packages"></a>
+
 ## 1.4. Kernel module package
 
 Linux distributions provide the commands `modprobe`, `insmod` and `depmod` within a package.
@@ -43,6 +47,7 @@ On Arch Linux:
     sudo pacman -S gcc kmod
 
 <a name="sec:modutils"></a>
+
 ## 1.5. What Modules are in my Kernel?
 
 To discover what modules are already loaded within your current kernel use the command `lsmod`.
@@ -58,11 +63,13 @@ This can be a long list, and you might prefer to search for something particular
     sudo lsmod | grep fat
 
 <a name="sec:buildkernel"></a>
+
 ## 1.6. Do I need to download and compile the kernel?
 
 For the purposes of following this guide you don't necessarily need to do that. However, it would be wise to run the examples within a test distribution running on a virtual machine in order to avoid any possibility of messing up your system.
 
 <a name="sec:preparation"></a>
+
 ## 1.7. Before We Begin
 
 Before we delve into code, there are a few issues we need to cover. Everyone's system is different and everyone has their own groove. Getting your first "hello world" program to compile and load correctly can sometimes be a trick. Rest assured, after you get over the initial hurdle of doing it for the first time, it will be smooth sailing thereafter.
@@ -71,7 +78,7 @@ Before we delve into code, there are a few issues we need to cover. Everyone's s
 
 2.  Using X Window System. <a name="sec:using_x"></a> It is highly recommended that you extract, compile and load all the examples this guide discusses from a console. You should not be working on this stuff in X Window System.
 
-    Modules can not print to the screen like `printf()` can, but they can log information and warnings, which ends up being printed on your screen, but only on a console. If you `insmod` a module from an xterm, the information and warnings will be logged, but only to your systemd journal. You will not see it unless you look through your `journalctl` . See [4](196795) for details. To have immediate access to this information, do all your work from the console.
+    Modules can not print to the screen like `printf()` can, but they can log information and warnings, which ends up being printed on your screen, but only on a console. If you `insmod` a module from an xterm, the information and warnings will be logged, but only to your systemd journal. You will not see it unless you look through your `journalctl` . See [4](https://wikidocs.net/196795) for details. To have immediate access to this information, do all your work from the console.
 
 3.  SecureBoot. Many contemporary computers are pre-configured with UEFI SecureBoot enabled. It is a security standard that can make sure the device boots using only software that is trusted by original equipment manufacturer. The default Linux kernel from some distributions have also enabled the SecureBoot. For such distributions, the kernel module has to be signed with the security key or you would get the "*ERROR: could not insert module*" when you insert your first hello world module:
 

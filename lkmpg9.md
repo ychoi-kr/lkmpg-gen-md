@@ -203,7 +203,7 @@ You can see there is an argument called `cmd` in `test_ioctl_ioctl()` function. 
 
 If you want to use ioctls in your own kernel modules, it is best to receive an official ioctl assignment, so if you accidentally get somebody else's ioctls, or if they get yours, you'll know something is wrong. For more information, consult the kernel source tree at [Documentation/userspace-api/ioctl/ioctl-number.rst](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/userspace-api/ioctl/ioctl-number.rst).
 
-Also, we need to be careful that concurrent access to the shared resources will lead to the race condition. The solution is using atomic Compare-And-Swap (CAS), which we mentioned at [6.5](196797#sec:chardev_c) section, to enforce the exclusive access.
+Also, we need to be careful that concurrent access to the shared resources will lead to the race condition. The solution is using atomic Compare-And-Swap (CAS), which we mentioned at [6.5](https://wikidocs.net/196797#sec:chardev_c) section, to enforce the exclusive access.
 
     /*
      * chardev2.c - Create an input/output character device

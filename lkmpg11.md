@@ -1,6 +1,7 @@
 11. Blocking Processes and threads
 
 <a name="sec:sleep"></a>
+
 ## 11.1. Sleep
 
 What do you do when somebody asks you for something you can not do right away? If you are a human being and you are bothered by a human being, the only thing you can say is: "*Not right now, I'm busy. Go away!*". But if you are a kernel module and you are bothered by a process, you have another possibility. You can put the process to sleep until you can service it. After all, processes are being put to sleep by the kernel and woken up all the time (that is the way multiple processes appear to run on the same time on a single CPU).
@@ -331,6 +332,7 @@ There is one more point to remember. Some times processes don't want to sleep, t
     }
 
 <a name="sec:completion"></a>
+
 ## 11.2. Completions
 
 Sometimes one thing should happen before another within a module having multiple threads. Rather than using `/bin/sleep` commands, the kernel has another way to do this which allows timeouts or interrupts to also happen.

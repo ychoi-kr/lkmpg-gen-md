@@ -3,6 +3,7 @@
 There are two main ways of running tasks: tasklets and work queues. 14.1. Tasklets are a quick and easy way of scheduling a single function to be run. For example, when triggered from an interrupt, whereas work queues are more complicated but also better suited to running multiple things in a sequence.
 
 <a name="sec:tasklet"></a>
+
 ## 14.1. Tasklets
 
 Here is an example tasklet module. The `tasklet_fn` function runs for a few seconds. In the meantime, execution of the `example_tasklet_init` function may continue to the exit point, depending on whether it is interrupted by **softirq**.
@@ -64,6 +65,7 @@ Although tasklet is easy to use, it comes with several defators, and developers 
 In recent kernels, tasklets can be replaced by workqueues, timers, or threaded interrupts.[^1] While the removal of tasklets remains a longer-term goal, the current kernel contains more than a hundred uses of tasklets. Now developers are proceeding with the API changes and the macro `DECLARE_TASKLET_OLD` exists for compatibility. For further information, see <https://lwn.net/Articles/830964/>.
 
 <a name="sec:workqueue"></a>
+
 ## 14.2. Work queues
 
 To add a task to the scheduler we can use a workqueue. The kernel then uses the Completely Fair Scheduler (CFS) to execute work within the queue.

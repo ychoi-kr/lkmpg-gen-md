@@ -2,7 +2,7 @@
 
 ## Replacement
 
-In Section [1.7](196792#sec:using_x), I said that X Window System and kernel module programming do not mix. That is true for developing kernel modules. But in actual use, you want to be able to send messages to whichever tty the command to load the module came from.
+In Section [1.7](https://wikidocs.net/196792#sec:using_x), I said that X Window System and kernel module programming do not mix. That is true for developing kernel modules. But in actual use, you want to be able to send messages to whichever tty the command to load the module came from.
 
 "tty" is an abbreviation of *teletype*: originally a combination keyboard-printer used to communicate with a Unix system, and today an abstraction for the text stream used for a Unix program, whether it is a physical terminal, an xterm on an X display, a network connection used with ssh, etc.
 
@@ -84,6 +84,7 @@ The way this is done is by using current, a pointer to the currently running tas
     MODULE_LICENSE("GPL");
 
 <a name="sec:flash_kb_led"></a>
+
 ## 13.1. Flashing keyboard LEDs
 
 In certain conditions, you may desire a simpler and more direct way to communicate to the external world. 13.1. Flashing keyboard LEDs can be such a solution: It is an immediate way to attract attention or to display a status condition. Keyboard LEDs are present on every hardware, they are always visible, they do not need any setup, and their use is rather simple and non-intrusive, compared to writing to a tty or a file.

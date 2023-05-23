@@ -3,6 +3,7 @@
 At the dawn of the internet, everybody trusted everybody completely...but that did not work out so well. When this guide was originally written, it was a more innocent era in which almost nobody actually gave a damn about crypto - least of all kernel developers. That is certainly no longer the case now. To handle crypto stuff, the kernel has its own API enabling common methods of encryption, decryption and your favourite hash functions.
 
 <a name="sec:hashfunc"></a>
+
 ## 16.1. Hash functions
 
 Calculating and checking the hashes of things is a common operation. Here is a demonstration of how to calculate a sha256 hash within a kernel module. To provide the sha256 algorithm support, make sure `CONFIG_CRYPTO_SHA256` is enabled in kernel.
@@ -88,6 +89,7 @@ Finally, remove the test module:
     sudo rmmod cryptosha256
 
 <a name="sec:org2fab20b"></a>
+
 ## 16.2. Symmetric key encryption
 
 Here is an example of symmetrically encrypting a string using the AES algorithm and a password.

@@ -1,6 +1,7 @@
 4. Hello World
 
 <a name="sec:org2d3e245"></a>
+
 ## 4.1. The Simplest Module
 
 Most people learning programming start out with some sort of "*hello world*" example. I don't know what happens to people who break with this tradition, but I think it is safer not to find out. We will start with a series of hello world programs that demonstrate the different aspects of the basics of writing a kernel module.
@@ -138,11 +139,11 @@ Notice that the dash was replaced by an underscore. To see what just happened in
 
 You now know the basics of creating, compiling, installing and removing modules. Now for more of a description of how this module works.
 
-Kernel modules must have at least two functions: a "start" (initialization) function called `init_module()` which is called when the module is `insmod`ed into the kernel, and an "end" (cleanup) function called `cleanup_module()` which is called just before it is removed from the kernel. Actually, things have changed starting with kernel 2.3.13. You can now use whatever name you like for the start and end functions of a module, and you will learn how to do this in Section [4.2](196795#hello_n_goodbye). In fact, the new method is the preferred method. However, many people still use `init_module()` and `cleanup_module()` for their start and end functions.
+Kernel modules must have at least two functions: a "start" (initialization) function called `init_module()` which is called when the module is `insmod`ed into the kernel, and an "end" (cleanup) function called `cleanup_module()` which is called just before it is removed from the kernel. Actually, things have changed starting with kernel 2.3.13. You can now use whatever name you like for the start and end functions of a module, and you will learn how to do this in Section [4.2](https://wikidocs.net/196795#hello_n_goodbye). In fact, the new method is the preferred method. However, many people still use `init_module()` and `cleanup_module()` for their start and end functions.
 
 Typically, `init_module()` either registers a handler for something with the kernel, or it replaces one of the kernel functions with its own code (usually code to do something and then call the original function). The `cleanup_module()` function is supposed to undo whatever `init_module()` did, so the module can be unloaded safely.
 
-Lastly, every kernel module needs to include `<linux/module.h>`. We needed to include `<linux/printk.h>` only for the macro expansion for the `pr_alert()` log level, which you'll learn about in Section [4.1](196795#sec:printk).
+Lastly, every kernel module needs to include `<linux/module.h>`. We needed to include `<linux/printk.h>` only for the macro expansion for the `pr_alert()` log level, which you'll learn about in Section [4.1](https://wikidocs.net/196795#sec:printk).
 
 1.  A point about coding style. Another thing which may not be immediately obvious to anyone getting started with kernel programming is that indentation within your code should be using **tabs** and **not spaces**. It is one of the coding conventions of the kernel. You may not like it, but you'll need to get used to it if you ever submit a patch upstream.
 
@@ -155,6 +156,7 @@ Lastly, every kernel module needs to include `<linux/module.h>`. We needed to in
     > Here is another exercise for the reader. See that comment above the return statement in `init_module()`? Change the return value to something negative, recompile and load the module again. What happens?
 
 <a name="hello_n_goodbye"></a>
+
 ## 4.2. Hello and Goodbye
 
 In early kernel versions you had to use the `init_module` and `cleanup_module` functions, as in the first hello world example, but these days you can name those anything you want by using the `module_init` and `module_exit` macros. These macros are defined in [include/linux/module.h](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/linux/module.h). The only requirement is that your init and cleanup functions must be defined before calling the those macros, otherwise you'll get compilation errors. Here is an example of this technique:
@@ -199,6 +201,7 @@ So now we have two real kernel modules under our belt. Adding another module is 
 Now have a look at [drivers/char/Makefile](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/char/Makefile) for a real world example. As you can see, some things got hardwired into the kernel (`obj-y`) but where have all those `obj-m` gone? Those familiar with shell scripts will easily be able to spot them. For those who are not, the `obj-$(CONFIG_FOO)` entries you see everywhere expand into `obj-y` or `obj-m`, depending on whether the `CONFIG_FOO` variable has been set to `y` or `m`. While we are at it, those were exactly the kind of variables that you have set in the `.config` file in the top-level directory of Linux kernel source tree, the last time when you said `make menuconfig` or something like that.
 
 <a name="init_n_exit"></a>
+
 ## 4.3. The __init and __exit Macros
 
 The `__init` macro causes the init function to be discarded and its memory freed once the init function finishes for built-in drivers, but not loadable modules. If you think about when the init function is invoked, this makes perfect sense.
@@ -235,6 +238,7 @@ These macros are defined in [include/linux/init.h](https://git.kernel.org/pub/sc
     MODULE_LICENSE("GPL");
 
 <a name="modlicense"></a>
+
 ## 4.4. Licensing and Module Documentation
 
 Honestly, who loads or even cares about proprietary modules? If you do then you might have seen something like this:
@@ -273,6 +277,7 @@ To reference what license you're using a macro is available called `MODULE_LICEN
     module_exit(cleanup_hello_4);
 
 <a name="modparam"></a>
+
 ## 4.5. Passing Command Line Arguments to a Module
 
 Modules can take command line arguments, but not with the argc/argv you might be used to.
@@ -400,6 +405,7 @@ I would recommend playing around with this code:
     insmod: ERROR: could not insert module hello-5.ko: Invalid parameters
 
 <a name="modfiles"></a>
+
 ## 4.6. Modules Spanning Multiple Files
 
 Sometimes it makes sense to divide a kernel module between several source files.
@@ -458,6 +464,7 @@ And finally, the makefile:
 This is the complete makefile for all the examples we have seen so far. The first five lines are nothing special, but for the last example we will need two lines. First we invent an object name for our combined module, second we tell `make` what object files are part of that module.
 
 <a name="precompiled"></a>
+
 ## 4.7. Building modules for a precompiled kernel
 
 Obviously, we strongly suggest you to recompile your kernel, so that you can enable a number of useful debugging features, such as forced module unloading (`MODULE_FORCE_UNLOAD`): when this option is enabled, you can force the kernel to unload a module even when it believes it is unsafe, via a `sudo rmmod -f module` command. This option can save you a lot of time and a number of reboots during the development of a module. If you do not want to recompile your kernel then you should consider running the examples within a test distribution on a virtual machine. If you mess anything up then you can easily reboot or restore the virtual machine (VM).
@@ -486,7 +493,7 @@ In other words, your kernel refuses to accept your module because version string
 
 To overcome this problem we could resort to the `--force-vermagic` option, but this solution is potentially unsafe, and unquestionably unacceptable in production modules. Consequently, we want to compile our module in an environment which was identical to the one in which our precompiled kernel was built. How to do this, is the subject of the remainder of this chapter.
 
-First of all, make sure that a kernel source tree is available, having exactly the same version as your current kernel. Then, find the configuration file which was used to compile your precompiled kernel. Usually, this is available in your current `boot` directory, under a name like `config-5.14.x`. You may just want to copy it to your kernel source tree: `cp /boot/config-'uname -r' .config`.
+First of all, make sure that a kernel source tree is available, having exactly the same version as your current kernel. Then, find the configuration file which was used to compile your precompiled kernel. Usually, this is available in your current `boot` directory, under a name like `config-5.14.x`. You may just want to copy it to your kernel source tree: `` cp /boot/config-`uname -r` .config ``.
 
 Let's focus again on the previous error message: a closer look at the version magic strings suggests that, even with two configuration files which are exactly the same, a slight difference in the version magic could be possible, and it is sufficient to prevent insertion of the module into the kernel. That slight difference, namely the custom string which appears in the module's version magic and not in the kernel's one, is due to a modification with respect to the original, in the makefile that some distributions include. Then, examine your `Makefile`, and make sure that the specified version information matches exactly the one used for your current kernel. For example, your makefile could start as follows:
 
@@ -499,7 +506,7 @@ In this case, you need to restore the value of symbol **EXTRAVERSION** to **-rc2
 
     cp /lib/modules/`uname -r`/build/Makefile linux-`uname -r`
 
-Here `linux-'uname -r'` is the Linux kernel source you are attempting to build.
+Here `` linux-`uname -r` `` is the Linux kernel source you are attempting to build.
 
 Now, please run `make` to update configuration and version headers and objects:
 

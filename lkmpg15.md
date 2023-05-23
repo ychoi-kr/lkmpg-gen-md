@@ -1,6 +1,7 @@
 15. 15.1. Interrupt Handlers
 
 <a name="sec:irq"></a>
+
 ## 15.1. Interrupt Handlers
 
 Except for the last chapter, everything we did in the kernel so far we have done as a response to a process asking for it, either by dealing with a special file, sending an `ioctl()`, or issuing a system call. But the job of the kernel is not just to respond to process requests. Another job, which is every bit as important, is to speak to the hardware connected to the machine.
@@ -18,6 +19,7 @@ In practice IRQ handling can be a bit more complex. Hardware is often designed i
 This function receives the IRQ number, the name of the function, flags, a name for `/proc/interrupts` and a parameter to be passed to the interrupt handler. Usually there is a certain number of IRQs available. How many IRQs there are is hardware-dependent. The flags can include `SA_SHIRQ` to indicate you are willing to share the IRQ with other interrupt handlers (usually because a number of hardware devices sit on the same IRQ) and `SA_INTERRUPT` to indicate this is a fast interrupt. This function will only succeed if there is not already a handler on this IRQ, or if you are both willing to share.
 
 <a name="sec:detect_button"></a>
+
 ## 15.2. Detecting button presses
 
 Many popular single board computers, such as Raspberry Pi or Beagleboards, have a bunch of GPIO pins. Attaching buttons to those and then having a button press do something is a classic case in which you might need to use interrupts, so that instead of having the CPU waste time and battery power polling for a change in input state, it is better for the input to trigger the CPU to then run a particular handling function.
@@ -171,6 +173,7 @@ Here is an example where buttons are connected to GPIO numbers 17 and 18 and an 
     MODULE_DESCRIPTION("Handle some GPIO interrupts");
 
 <a name="sec:bottom_half"></a>
+
 ## 15.3. Bottom Half
 
 Suppose you want to do a bunch of stuff inside of an interrupt routine. A common way to do that without rendering the interrupt unavailable for a significant duration is to combine it with a tasklet. This pushes the bulk of the work off into the scheduler.

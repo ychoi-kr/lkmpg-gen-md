@@ -1,6 +1,7 @@
 5. Preliminaries
 
 <a name="sec:module_init_exit"></a>
+
 ## 5.1. How modules begin and end
 
 A program usually begins with a `main()` function, executes a bunch of instructions and terminates upon completion of those instructions. Kernel modules work a bit differently. A module always begin with either the `init_module` or the function you specify with `module_init` call. This is the entry function for modules; it tells the kernel what functionality the module provides and sets up the kernel to run the module's functions when they are needed. Once it does this, entry function returns and the module does nothing until the kernel wants to do something with the code that the module provides.
@@ -10,6 +11,7 @@ All modules end by calling either `cleanup_module` or the function you specify w
 Every module must have an entry function and an exit function. Since there's more than one way to specify entry and exit functions, I will try my best to use the terms "entry function" and "exit function", but if I slip and simply refer to them as `init_module` and `cleanup_module`, I think you will know what I mean.
 
 <a name="sec:avail_func"></a>
+
 ## 5.2. Functions available to modules
 
 Programmers use functions they do not define all the time. A prime example of this is `printf()`. You use these library functions which are provided by the standard C library, libc. The definitions for these functions do not actually enter your program until the linking stage, which insures that the code (for `printf()` for example) is available, and fixes the call instruction to point to that code.
@@ -33,6 +35,7 @@ with `gcc -Wall -o hello hello.c`. Run the executable with `strace ./hello`. Are
 You can even write modules to replace the kernel's system calls, which we will do shortly. Crackers often make use of this sort of thing for backdoors or trojans, but you can write your own modules to do more benign things, like have the kernel write Tee hee, that tickles! every time someone tries to delete a file on your system.
 
 <a name="sec:user_kernl_space"></a>
+
 ## 5.3. User Space vs Kernel Space
 
 A kernel is all about access to resources, whether the resource in question happens to be a video card, a hard drive or even memory. Programs often compete for the same resource. As I just saved this document, updatedb started updating the locate database. My vim session and updatedb are both using the hard drive concurrently. The kernel needs to keep things orderly, and not give users access to resources whenever they feel like it. To this end, a CPU can run in different modes. Each mode gives a different level of freedom to do what you want on the system. The Intel 80386 architecture had 4 of these modes, which were called rings. Unix uses only two rings; the highest ring (ring 0, also known as "supervisor mode" where everything is allowed to happen) and the lowest ring, which is called "user mode".
@@ -40,6 +43,7 @@ A kernel is all about access to resources, whether the resource in question happ
 Recall the discussion about library functions vs system calls. Typically, you use a library function in user mode. The library function calls one or more system calls, and these system calls execute on the library function's behalf, but do so in supervisor mode since they are part of the kernel itself. Once the system call completes its task, it returns and execution gets transferred back to user mode.
 
 <a name="sec:namespace"></a>
+
 ## 5.4. Name Space
 
 When you write a small C program, you use variables which are convenient and make sense to the reader. If, on the other hand, you are writing routines which will be part of a bigger problem, any global variables you have are part of a community of other peoples' global variables; some of the variable names can clash. When a program has lots of global variables which aren't meaningful enough to be distinguished, you get namespace pollution. In large projects, effort must be made to remember reserved names, and to find ways to develop a scheme for naming unique variable names and symbols.
@@ -49,6 +53,7 @@ When writing kernel code, even the smallest module will be linked against the en
 The file `/proc/kallsyms` holds all the symbols that the kernel knows about and which are therefore accessible to your modules since they share the kernel's codespace.
 
 <a name="sec:codespace"></a>
+
 ## 5.5. Code space
 
 Memory management is a very complicated subject and the majority of O'Reilly's [Understanding The Linux Kernel](https://www.oreilly.com/library/view/understanding-the-linux/0596005652/) exclusively covers memory management! We are not setting out to be experts on memory managements, but we do need to know a couple of facts to even begin worrying about writing real modules.
@@ -60,6 +65,7 @@ The kernel has its own space of memory as well. Since a module is code which can
 By the way, I would like to point out that the above discussion is true for any operating system which uses a monolithic kernel. This is not quite the same thing as *"building all your modules into the kernel"*, although the idea is the same. There are things called microkernels which have modules which get their own codespace. The [GNU Hurd](https://www.gnu.org/software/hurd/) and the [Zircon kernel](https://fuchsia.dev/fuchsia-src/concepts/kernel) of Google Fuchsia are two examples of a microkernel.
 
 <a name="sec:device_drivers"></a>
+
 ## 5.6. Device Drivers
 
 One class of module is the device driver, which provides functionality for hardware like a serial port. On Unix, each piece of hardware is represented by a file located in `/dev` named a device file which provides the means to communicate with the hardware. The device driver provides the communication on behalf of a user program. So the es1370.ko sound card device driver might connect the `/dev/sound` device file to the Ensoniq IS1370 sound card. A userspace program like mp3blaster can use `/dev/sound` without ever knowing what kind of sound card is installed.

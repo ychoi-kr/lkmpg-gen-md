@@ -26,7 +26,7 @@ This function is used for debugging and should fill the buffer parameter with th
 
 vinput devices are created and destroyed using sysfs. And, event injection is done through a `/dev` node. The device name will be used by the userland to export a new virtual input device.
 
-The `class_attribute` structure is similar to other attribute types we talked about in section [8](196799):
+The `class_attribute` structure is similar to other attribute types we talked about in section [8](https://wikidocs.net/196799):
 
     struct class_attribute {
         struct attribute attr;

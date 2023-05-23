@@ -3,6 +3,7 @@
 If processes running on different CPUs or in different threads try to access the same memory, then it is possible that strange things can happen or your system can lock up. To avoid this, various types of mutual exclusion kernel functions are available. These indicate if a section of code is "locked" or "unlocked" so that simultaneous attempts to run it can not happen.
 
 <a name="sec:mutex"></a>
+
 ## 12.1. Mutex
 
 You can use kernel mutexes (mutual exclusions) in much the same manner that you might deploy them in userland. This may be all that is needed to avoid collisions in most cases.
@@ -49,6 +50,7 @@ You can use kernel mutexes (mutual exclusions) in much the same manner that you 
     MODULE_LICENSE("GPL");
 
 <a name="sec:spinlock"></a>
+
 ## 12.2. Spinlocks
 
 As the name suggests, spinlocks lock up the CPU that the code is running on, taking 100% of its resources. Because of this you should only use the spinlock mechanism around code which is likely to take no more than a few milliseconds to run and so will not noticeably slow anything down from the user's point of view.
@@ -119,6 +121,7 @@ The example here is `"irq safe"` in that if interrupts happen during the lock th
     MODULE_LICENSE("GPL");
 
 <a name="sec:rwlock"></a>
+
 ## 12.3. Read and write locks
 
 12.3. Read and write locks are specialised kinds of spinlocks so that you can exclusively read from something or write to something. Like the earlier spinlocks example, the one below shows an "irq safe" situation in which if other functions were triggered from irqs which might also read and write to whatever you are concerned with then they would not disrupt the logic. As before it is a good idea to keep anything done within the lock as short as possible so that it does not hang up the system and cause users to start revolting against the tyranny of your module.
@@ -182,6 +185,7 @@ The example here is `"irq safe"` in that if interrupts happen during the lock th
 Of course, if you know for sure that there are no functions triggered by irqs which could possibly interfere with your logic then you can use the simpler `read_lock(&myrwlock)` and `read_unlock(&myrwlock)` or the corresponding write functions.
 
 <a name="sec:atomics"></a>
+
 ## 12.4. Atomic operations
 
 If you are doing simple arithmetic: adding, subtracting or bitwise operations, then there is another way in the multi-CPU and multi-hyperthreaded world to stop other parts of the system from messing with your mojo. By using atomic operations you can be confident that your addition, subtraction or bit flip did actually happen and was not overwritten by some other shenanigans. An example is shown below.

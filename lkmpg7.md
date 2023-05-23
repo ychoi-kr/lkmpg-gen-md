@@ -88,11 +88,13 @@ Every time the file `/proc/helloworld` is read, the function `procfile_read` is 
     MODULE_LICENSE("GPL");
 
 <a name="sec:proc_ops"></a>
+
 ## 7.1. The proc_ops Structure
 
 The `proc_ops` structure is defined in [include/linux/proc_fs.h](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/linux/proc_fs.h) in Linux v5.6+. In older kernels, it used `file_operations` for custom hooks in `/proc` file system, but it contains some members that are unnecessary in VFS, and every time VFS expands `file_operations` set, `/proc` code comes bloated. On the other hand, not only the space, but also some operations were saved by this structure to improve its performance. For example, the file which never disappears in `/proc` can set the `proc_flag` as `PROC_ENTRY_PERMANENT` to save 2 atomic ops, 1 allocation, 1 free in per open/read/close sequence.
 
 <a name="sec:read_write_procfs"></a>
+
 ## 7.2. Read and Write a /proc File
 
 We have seen a very simple example for a `/proc` file where we only read the file `/proc/helloworld`. It is also possible to write in a `/proc` file. It works the same way as read, a function is called when the `/proc` file is written. But there is a little difference with read, data comes from user, so you have to import data from user space to kernel space (with `copy_from_user` or `get_user`)
@@ -201,6 +203,7 @@ The only memory segment accessible to a process is its own, so when writing regu
     MODULE_LICENSE("GPL");
 
 <a name="sec:manage_procfs"></a>
+
 ## 7.3. Manage /proc file with standard filesystem
 
 We have seen how to read and write a `/proc` file with the `/proc` interface. But it is also possible to manage `/proc` file with inodes. The main concern is to use advanced functions, like permissions.
@@ -325,6 +328,7 @@ It is important to note that the standard roles of read and write are reversed i
 Still hungry for procfs examples? Well, first of all keep in mind, there are rumors around, claiming that procfs is on its way out, consider using `sysfs` instead. Consider using this mechanism, in case you want to document something kernel related yourself.
 
 <a name="sec:manage_procfs_with_seq_file"></a>
+
 ## 7.4. Manage /proc file with seq_file
 
 As we have seen, writing a `/proc` file may be quite "complex". So to help people writting `/proc` file, there is an API named `seq_file` that helps formating a `/proc` file for output. It is based on sequence, which is composed of 3 functions: `start()`, `next()`, and `stop()`. The `seq_file` API starts a sequence when a user read the `/proc` file.
