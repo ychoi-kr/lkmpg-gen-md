@@ -261,7 +261,8 @@ def convert_urls(content):
     return content
 
 
-def convert_verbatim(content):
+def convert_verbatim_and_commands(content):
+    # First convert \|(.+?)\| to `(.+?)`
     verbatim_pattern = r'\\\|(.+?)\\\|'
     matches = re.finditer(verbatim_pattern, content)
     for match in matches:
@@ -269,6 +270,11 @@ def convert_verbatim(content):
         code_text = match.group(1)
         replacement = f"`{code_text}`"
         content = content.replace(original_text, replacement)
+        
+    content = content.replace("`cp /boot/config-'uname -r' .config`", r"`` cp /boot/config-`uname -r` .config ``")
+    content = content.replace("`linux-'uname -r'`", r"`` linux-`uname -r` ``")
+    content = content.replace("'uname -r'", r"\\`uname -r\\`")
+
     return content
 
 
@@ -349,7 +355,7 @@ def main():
         # file.write(md_content)
     
     md_content = convert_urls(md_content)
-    md_content = convert_verbatim(md_content)
+    md_content = convert_verbatim_and_commands(md_content)
     md_content = remove_flushleft_md(md_content)
     md_content = unescape_characters(md_content)
     
