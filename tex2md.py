@@ -13,7 +13,6 @@ temp_tex = src_dir + '/temp.tex'
 trg_dir = '.'
 temp_md = trg_dir + '/temp.md'
 
-#section_data = []
 current_chapter = 0
 current_section = 0
 
@@ -130,7 +129,6 @@ def add_section_numbers(content):
     global current_section
     
     chapter_pattern = r'\n# (.+)(\{#.+?\})*'  # some chapter has no ref
-    #chapter_pattern = r'\s# (.+?)\s*\{#(.+?)\}'
     section_pattern = r'\s## (.+?)\s*\{#(.+?)\}'
 
     matches = list(re.finditer(chapter_pattern, content)) + list(re.finditer(section_pattern, content))
@@ -141,7 +139,6 @@ def add_section_numbers(content):
             current_chapter += 1
             current_section = 0
             section_title = match.group(1)
-            #label = match.group(2)
             replacement = f'{current_chapter}. {section_title}'
         else:
             current_section += 1
@@ -178,10 +175,8 @@ def populate_ref_dic(content):
         
         standalone_label_match = re.match(standalone_label_pattern, line)
         if standalone_label_match:
-            #print(standalone_label_match.group(3))
             ref_dic[standalone_label_match.group(3)] = current_section
             
-    #print(ref_dic)
 
 
 def convert_section_references(content):
@@ -273,7 +268,6 @@ def convert_verbatim_and_commands(content):
         
     content = content.replace("`cp /boot/config-'uname -r' .config`", r"`` cp /boot/config-`uname -r` .config ``")
     content = content.replace("`linux-'uname -r'`", r"`` linux-`uname -r` ``")
-    content = content.replace("'uname -r'", r"\\`uname -r\\`")
 
     return content
 
@@ -334,26 +328,11 @@ def main():
     
     md_content = add_section_numbers(md_content)
     
-    # with open("temp1.md", 'w') as file:
-        # file.write(md_content)
-    
     populate_ref_dic(md_content)
     
     md_content = convert_section_references(md_content)
-    
-    # with open("temp2.md", 'w') as file:
-        # file.write(md_content)
-    
     md_content = convert_reference_labels(md_content)
-    
-    # with open("temp3.md", 'w') as file:
-        # file.write(md_content)
-    
     md_content = convert_refs(md_content)
-    
-    # with open("temp4.md", 'w') as file:
-        # file.write(md_content)
-    
     md_content = convert_urls(md_content)
     md_content = convert_verbatim_and_commands(md_content)
     md_content = remove_flushleft_md(md_content)
